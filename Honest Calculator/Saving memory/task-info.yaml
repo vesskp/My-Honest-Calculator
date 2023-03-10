@@ -1,0 +1,103 @@
+type: edu
+files:
+- name: honest_calc.py
+  visible: true
+  text: "# write your code here\nmsg_0 = \"Enter an equation\"\nmsg_1 = \"Do you even\
+    \ know what numbers are? Stay focused!\"\nmsg_2 = \"Yes ... an interesting math\
+    \ operation. You've slept through all classes, haven't you?\"\nmsg_3 = \"Yeah...\
+    \ division by zero. Smart move...\"\nmsg_4 = \"Do you want to store the result?\
+    \ (y / n):\" \nmsg_5 = \"Do you want to continue calculations? (y / n):\"\n\n\
+    memory = 0\nwhile True:\n    while True:\n        print(msg_0)\n        calc =\
+    \ input()\n        x, oper, y = calc.split()\n        if x == \"M\":\n       \
+    \     x = memory\n        if y == \"M\":\n            y = memory\n        try:\n\
+    \            float(x)\n            float(y)\n        except:\n            print(msg_1)\n\
+    \            continue\n        x = float(x)\n        y = float(y)\n        if\
+    \ oper not in [\"+\", \"-\", \"*\", \"/\"]:\n            print(msg_2)\n      \
+    \      continue\n        if oper == \"/\" and y == 0:\n            print(msg_3)\n\
+    \            continue\n        if oper == \"+\":\n            result = x + y\n\
+    \        if oper == \"-\":\n            result = x - y\n        if oper == \"\
+    *\":\n            result = x * y\n        if oper == \"/\" and y != 0:\n     \
+    \       result = x / y\n        print(result)\n        break\n\n    print(msg_4)\n\
+    \    while True:\n        answer = input()\n        if answer == \"y\":\n    \
+    \        memory = result\n            break\n        elif answer == \"n\":\n \
+    \           break\n        else:\n            continue\n\n    print(msg_5)\n \
+    \   again = True\n    while True:\n        answer = input()\n        if answer\
+    \ == \"y\":\n            break\n        elif answer == \"n\":\n            again\
+    \ = False\n            break\n        else:\n            continue\n\n    if not\
+    \ again:\n        break\n"
+  learner_created: false
+- name: test/__init__.py
+  visible: false
+  learner_created: false
+- name: test/tests.py
+  visible: false
+  text: |
+    from hstest import StageTest, CheckResult, WrongAnswer, dynamic_test, TestedProgram
+
+    msg = ["Enter an equation",
+           "Do you even know what numbers are? Stay focused!",
+           "Yes ... an interesting math operation. You've slept through all classes, haven't you?",
+           "Yeah... division by zero. Smart move...",
+           "Do you want to store the result? (y / n):",
+           "Do you want to continue calculations? (y / n):",
+           " ... lazy",
+           " ... very lazy",
+           " ... very, very lazy",
+           "You are",
+           "Are you sure? It is only one digit! (y / n)",
+           "Don't be silly! It's just one number! Add to the memory? (y / n)",
+           "Last chance! Do you really want to embarrass yourself? (y / n)"
+    ]
+
+
+    def add_enter(txt):
+        return "\n".join([txt, msg[0]])
+
+
+    def add_memory(txt):
+        return "\n".join([txt, msg[4]])
+
+
+    data = [(("4 * 5.0", "\n".join([msg[9] + msg[6], add_memory("20.0")])), ("n", msg[5]), ("n", "")),
+            (("2 + 5.5", add_memory("7.5")), ("y", msg[5]), ("y", msg[0]), ("M - 9", add_memory("-1.5")), ("n", msg[5]), ("n", "")),
+            (("225 / 15", add_memory("15.0")), ("y", msg[5]), ("y",msg[0]),
+             ("1 * 5", "\n".join([msg[9] + msg[6] + msg[7], add_memory("5.0")])), ("y", msg[10]), ("y", msg[11]), ("n", msg[5]), ("y", msg[0]),
+            ("M - 10", add_memory("5.0")), ("y", msg[10]), ("y", msg[11]), ("y", msg[12]), ("y", msg[5]), ("y", msg[0]),
+             ("M / M",  "\n".join([msg[9] + msg[6], add_memory("1.0")])), ("n", msg[5]), ("n", "")),
+           ]  # (input data, msg sentence])
+
+
+    class HonestCalc(StageTest):
+        @dynamic_test(data=data)
+        def test(self, *items):
+            pr = TestedProgram()
+            output = pr.start()
+            if msg[0] not in output:
+                return CheckResult.wrong(f"Expected: ({msg[0]});\nFound:    ({output.strip()})")
+            for item in items:
+                output = pr.execute(item[0])
+                if item[1] != output.strip():
+                    return CheckResult.wrong(f"Expected:\n{item[1]}\nFound:\n{output.strip()}")
+            if not pr.is_finished():
+                return CheckResult.wrong("Your program unnecessarily waiting for input.")
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        HonestCalc().run_tests()
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |
+    from test.tests import HonestCalc
+
+    if __name__ == '__main__':
+        HonestCalc().run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/15814#comment
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Fri, 10 Mar 2023 18:12:42 UTC"
+record: -1
